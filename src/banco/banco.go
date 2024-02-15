@@ -19,7 +19,7 @@ func Conectar() (*gorm.DB, error) {
 
 	db = novoDB
 
-	if err := db.AutoMigrate(&models.Product{}); err != nil {
+	if err := db.AutoMigrate(&models.Product{}, &models.Music{}, &models.Usuario{}); err != nil {
 		return nil, err
 	}
 

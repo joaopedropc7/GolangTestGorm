@@ -32,8 +32,7 @@ func (r *ProductRepository) GetAllProducts() ([]models.Product, error) {
 func (r *ProductRepository) GetProductById(productId int64) (models.Product, error) {
 	var product models.Product
 	if err := r.DB.First(&product, productId).Error; err != nil {
-		erro := "Não foi encontrado nenhum registro com este ID!"
-		return models.Product{}, errors.New(erro)
+		return models.Product{}, errors.New("não foi encontrado nenhum registro com este ID")
 	}
 	return product, nil
 }
@@ -43,7 +42,7 @@ func (r *ProductRepository) UpdateProductParsingId(productId int64, productUpdat
 	var product models.Product
 	if err := r.DB.First(&product, productId).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("Não foi encontrado nenhum registro com este ID!")
+			return nil, errors.New("não foi encontrado nenhum registro com este ID")
 		}
 		return nil, err
 	}
