@@ -31,12 +31,11 @@ func Carregar() {
 	}
 
 	StringConexaoBanco = fmt.Sprintf(
-		"host=%s port=%s Usuario=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORTA"),
+		"user=%s dbname=%s password=%s host=%s sslmode=disable",
 		os.Getenv("DB_Usuario"),
-		os.Getenv("DB_SENHA"),
 		os.Getenv("DB_NOME"),
+		os.Getenv("DB_SENHA"),
+		os.Getenv("DB_HOST"),
 	)
 
 	SecretKey = []byte(os.Getenv("SECRET_KEY"))

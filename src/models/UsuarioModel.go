@@ -10,7 +10,7 @@ import (
 
 // Usuario REPRESENTA UM Usuario UTILIZANDO A REDE SOCIAL
 type Usuario struct {
-	ID       uint64    `json:"id,omitempty"`
+	ID       uint64    `gorm:"primaryKey"`
 	Nome     string    `json:"nome,omitempty"`
 	Nick     string    `json:"nick,omitempty"`
 	Email    string    `json:"email,omitempty"`
@@ -21,6 +21,11 @@ type Usuario struct {
 type UsuarioRequestVO struct {
 	Nome  string `json:"nome,omitempty"`
 	Nick  string `json:"nick,omitempty"`
+	Email string `json:"email,omitempty"`
+	Senha string `json:"senha,omitempty"`
+}
+
+type UsuarioLogin struct {
 	Email string `json:"email,omitempty"`
 	Senha string `json:"senha,omitempty"`
 }

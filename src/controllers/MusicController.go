@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"Routes/src/authentication"
 	"Routes/src/models"
 	"Routes/src/response"
 	"Routes/src/service"
@@ -16,10 +17,20 @@ import (
 
 func UploadMusic(w http.ResponseWriter, r *http.Request) {
 
-	// Obter o campo JSON do formulário
+	usuarioID, errExtract := authentication.ExtratUsuarioID(r)
+	if errExtract != nil {
+		response.Error(w, http.StatusUnauthorized, errExtract)
+		return
+	}
+
+	usuarioInDB, errServiceGetUserInDB := service.FindUserById(usuarioID)
+	if errServiceGetUserInDB != nil {
+		response.Error(w, http.StatusInternalServerError, errServiceGetUserInDB)
+		return
+	}
+
 	jsonData := r.FormValue("json_field")
 
-	// Decodificar o JSON
 	var musicInput models.MusicRequestVO
 	erro := json.Unmarshal([]byte(jsonData), &musicInput)
 	if erro != nil {
@@ -47,7 +58,7 @@ func UploadMusic(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createdMusic, err := service.CreateMusic(&musicInput, fileData)
+	createdMusic, err := service.CreateMusic(&musicInput, fileData, usuarioInDB)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Erro ao criar a música: %v", err), http.StatusInternalServerError)
 		return

@@ -12,4 +12,10 @@ var UsuarioRoutes = []Rota{
 		Funcao:             controllers.CreateUser,
 		RequerAutenticacao: false,
 	},
+	{
+		URI:                "/login",
+		Metodo:             http.MethodPost,
+		Funcao:             controllers.Login,
+		RequerAutenticacao: false,
+	},
 }

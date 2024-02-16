@@ -22,3 +22,18 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	response.JSON(w, http.StatusOK, usuario)
 }
+
+func Login(w http.ResponseWriter, r *http.Request) {
+	var loginInput models.UsuarioLogin
+	if err := json.NewDecoder(r.Body).Decode(&loginInput); err != nil {
+		response.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	token, err := service.LoginWithEmail(loginInput.Email, loginInput.Senha)
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, err)
+	}
+
+	w.Write([]byte(token))
+}

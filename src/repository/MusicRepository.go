@@ -18,13 +18,12 @@ func NewMusicRepository(db *gorm.DB) *MusicRepository {
 }
 
 func (r *MusicRepository) CreateMusic(music *models.Music, fileData []byte) (*models.Music, error) {
-	// Salvar o arquivo no sistema de arquivos
+
 	err := r.saveFile(music, fileData)
 	if err != nil {
 		return nil, err
 	}
 
-	// Inserir informações da música no banco de dados
 	if err := r.DB.Create(music).Error; err != nil {
 		return nil, err
 	}
@@ -54,9 +53,18 @@ func (r *MusicRepository) saveFile(music *models.Music, fileData []byte) error {
 	uploadPath := "./uploads/"
 	filePath := uploadPath + music.Title + ".mp3"
 
-	err := os.MkdirAll(uploadPath, os.ModePerm)
-	if err != nil {
+	_, err := os.Stat(filePath)
+	if err == nil {
+		// O arquivo já existe, retorne um erro ou tome outra ação apropriada
+		return errors.New("Já existe um arquivo com o mesmo título")
+	} else if !os.IsNotExist(err) {
+		// Outro erro ocorreu ao verificar a existência do arquivo
 		return err
+	}
+
+	errMkDir := os.MkdirAll(uploadPath, os.ModePerm)
+	if errMkDir != nil {
+		return errMkDir
 	}
 
 	file, err := os.Create(filePath)
@@ -76,7 +84,7 @@ func (r *MusicRepository) saveFile(music *models.Music, fileData []byte) error {
 
 func (r *MusicRepository) GetMusicById(musicId int64) (models.Music, error) {
 	var music models.Music
-	if err := r.DB.First(&music, music).Error; err != nil {
+	if err := r.DB.First(&music, musicId).Error; err != nil {
 		return models.Music{}, errors.New("não foi encontrado nenhum registro com este ID")
 	}
 	return music, nil

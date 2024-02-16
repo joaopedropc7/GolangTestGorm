@@ -6,7 +6,7 @@ import (
 	"Routes/src/repository"
 )
 
-func CreateMusic(music *models.MusicRequestVO, fileData []byte) (*models.Music, error) {
+func CreateMusic(music *models.MusicRequestVO, fileData []byte, usuario *models.Usuario) (*models.Music, error) {
 
 	db, err := banco.Conectar()
 	if err != nil {
@@ -14,9 +14,10 @@ func CreateMusic(music *models.MusicRequestVO, fileData []byte) (*models.Music, 
 	}
 
 	musicModel := &models.Music{
-		Artist: music.Artist,
-		Album:  music.Album,
-		Title:  music.Title,
+		Artist:  music.Artist,
+		Album:   music.Album,
+		Title:   music.Title,
+		Usuario: usuario,
 	}
 
 	musicRepository := repository.NewMusicRepository(db)
